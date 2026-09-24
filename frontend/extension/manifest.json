@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "SGP Token Optimizer",
+  "version": "1.0.0",
+  "description": "AI-powered prompt token optimizer using the SGP-TOKEN backend.",
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SGP Token Optimizer"
+  },
+
+  "permissions": [
+    "storage"
+  ],
+
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  }
+}

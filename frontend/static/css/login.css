@@ -1,0 +1,10 @@
+/* Login page — brand panel sits on the right (mirrors signup/home)
+   so the two auth screens feel related but distinguishable. */
+
+.login-shell .brand-copy h1 span {
+  color: var(--teal);
+}
+
+.login-shell .stat-chip:nth-child(2) .value {
+  color: var(--teal);
+}

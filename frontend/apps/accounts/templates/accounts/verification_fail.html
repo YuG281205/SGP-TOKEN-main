@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Failed | AI Token Optimizer</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body data-state="error" data-redirect="/login/" data-seconds="10">
+
+    <div class="card">
+
+        <div class="token-ring" id="tokenRing">
+            <div class="glyph-wrap">
+                <div class="glyph-circle">
+                    <svg class="glyph" viewBox="0 0 24 24">
+                        <path class="glyph-path" d="M6 6l12 12" />
+                        <path class="glyph-path" d="M18 6L6 18" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="heading">Verification failed</h1>
+        <p class="subtext">This link is invalid or has expired.<br>Please register again or request a new email.</p>
+
+        <p class="redirect-line">
+            Redirecting to login in <span id="countdown">10</span>s
+        </p>
+
+        <a class="btn" href="/login/">Go to login</a>
+
+    </div>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

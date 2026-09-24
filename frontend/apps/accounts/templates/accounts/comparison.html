@@ -1,0 +1,197 @@
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AI Token Optimizer | Comparison History</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            rel="stylesheet">
+
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/auth-shared.css' %}">
+        <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+        <link rel="stylesheet" href="{% static 'css/comparison.css' %}">
+    </head>
+    <body>
+
+        <!-- ================= NAVBAR ================= -->
+        <header class="navbar">
+
+            <div class="logo-section">
+                <h2>AI Token Optimizer</h2>
+            </div>
+
+            <div class="user-section">
+                <span>Welcome, <strong id="username">User</strong></span>
+                <button id="logoutBtn">Logout</button>
+            </div>
+
+        </header>
+
+        <!-- ================= MAIN CONTAINER ================= -->
+        <div class="container">
+
+            <!-- ============== SIDEBAR ============== -->
+
+            <aside class="sidebar">
+
+                <ul>
+                         <!-- Prompting Panel -->
+
+                    <li>
+
+                        <a href="{% url 'prompting_panel' %}">
+
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                            Prompting Panel
+
+                        </a>
+
+                    </li>
+
+                    <li>
+                        <a href="{% url 'dashboard' %}">
+                            <i class="fa-solid fa-house"></i>
+                            Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'history_page' %}">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            History
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{%url 'prompt-analysis'%}">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            Prompt Analysis
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{%url 'analytics'%}">
+                            <i class="fa-solid fa-chart-line"></i>
+                            Analytics
+                        </a>
+                    </li>
+
+                    <li class="active">
+                        <a href="{%url 'comparison'%}">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                            Comparison
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="#">
+                            <i class="fa-solid fa-gear"></i>
+                            Settings
+                        </a>
+                    </li>
+
+                    
+
+                </ul>
+
+            </aside>
+
+            <!-- ============== MAIN CONTENT ============== -->
+
+            <main class="content">
+
+                <section class="page-header">
+                    <h1>Comparison History</h1>
+                    <p>Runs sharing the same History ID are grouped and laid out side by side so you can compare optimizers directly.</p>
+                </section>
+
+                <section class="comparison-groups" id="comparisonGroups">
+                    <!-- Groups of cards are injected here by comparison.js -->
+                </section>
+
+            </main>
+
+        </div>
+
+        <!-- ================= DETAILS MODAL ================= -->
+
+        <div id="comparisonModal" class="comparison-modal-overlay">
+
+            <div class="comparison-modal">
+
+                <button class="close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <h3>Comparison Details</h3>
+                <p style="color: var(--mist); font-size: 13px;">History ID: <span id="historyId"></span></p>
+
+                <hr>
+
+                <div class="modal-grid">
+                    <div>
+                        <h4>Optimizer</h4>
+                        <p id="optimizerName"></p>
+                    </div>
+                    <div>
+                        <h4>Status</h4>
+                        <p id="status"></p>
+                    </div>
+                </div>
+
+                <h4>Original Prompt</h4>
+                <textarea id="originalPrompt" rows="5" readonly></textarea>
+
+                <h4>Optimized Prompt</h4>
+                <textarea id="optimizedPrompt" rows="5" readonly></textarea>
+
+                <hr>
+
+                <h4>Token Details</h4>
+
+                <div class="modal-grid">
+                    <p>Optimized Input Tokens : <span id="optimizedInputTokens"></span></p>
+                    <p>Optimized Output Tokens : <span id="optimizedOutputTokens"></span></p>
+                    <p>Optimized Total Tokens : <span id="optimizedTotalTokens"></span></p>
+                    <p>Tokens Saved : <span id="tokensSaved"></span></p>
+                </div>
+
+                <hr>
+
+                <h4>Scores</h4>
+
+                <div class="modal-grid">
+                    <p>Semantic Accuracy : <span id="semanticAccuracy"></span></p>
+                    <p>Optimization Score : <span id="optimizationScore"></span></p>
+                    <p>Estimated Cost Saved : <span id="estimatedCostSaved"></span></p>
+                    <p>Processing Time : <span id="processingTime"></span></p>
+                </div>
+
+                <p>Created At : <span id="createdAt"></span></p>
+
+                <hr>
+
+                <h4>Optimized Prompt Screenshot</h4>
+
+                <img
+                    id="optimizedPromptImage"
+                    src=""
+                    alt="Optimized Prompt"
+                />
+
+            </div>
+
+        </div>
+
+        <script src="{% static 'js/cursor.js' %}"></script>
+        <script src="{% static 'js/comparison.js' %}"></script>
+
+    </body>
+    </html>

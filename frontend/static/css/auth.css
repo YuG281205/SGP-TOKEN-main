@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+    --bg: #080b14;
+    --card: #121a2c;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text: #eef2f8;
+    --muted: #94a3b8;
+    --dim: #5b6b85;
+
+    --purple-1: #7c6cf6;
+    --purple-2: #6366f1;
+    --teal: #2dd4bf;
+    --amber: #fbbf24;
+    --red: #fb7185;
+    --red-2: #f43f5e;
+
+    --radius-lg: 22px;
+    --radius-md: 12px;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+body[data-state="success"] {
+    --accent-1: var(--teal);
+    --accent-2: var(--purple-1);
+    --accent-glow: rgba(45, 212, 191, 0.28);
+}
+
+body[data-state="pending"] {
+    --accent-1: var(--amber);
+    --accent-2: var(--purple-1);
+    --accent-glow: rgba(251, 191, 36, 0.24);
+}
+
+body[data-state="error"] {
+    --accent-1: var(--red);
+    --accent-2: var(--red-2);
+    --accent-glow: rgba(251, 113, 133, 0.28);
+}
+
+* { box-sizing: border-box; }
+
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background:
+        radial-gradient(600px 400px at 15% 10%, rgba(124, 108, 246, 0.16), transparent 60%),
+        radial-gradient(500px 400px at 85% 90%, rgba(45, 212, 191, 0.08), transparent 60%),
+        var(--bg);
+    font-family: var(--font-body);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 48px 36px 36px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============================================================
+   TOKEN RING — the signature element
+   16 small "token" chips arranged in a circle; each lights up
+   in sequence, then a center glyph (check / x) draws itself.
+   ============================================================ */
+.token-ring {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    margin: 0 auto 28px;
+}
+
+.chip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    opacity: 0;
+    transform-origin: 0 0;
+    transform:
+        rotate(calc(var(--i) * 22.5deg))
+        translate(64px, -3px)
+        scale(0.4);
+    animation: chipIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--i) * 0.05s);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+@keyframes chipIn {
+    0%   { opacity: 0; transform: rotate(calc(var(--i) * 22.5deg)) translate(64px, -3px) scale(0.2); }
+    60%  { opacity: 1; transform: rotate(calc(var(--i) * 22.5deg)) translate(64px, -3px) scale(1.15); }
+    100% { opacity: 1; transform: rotate(calc(var(--i) * 22.5deg)) translate(64px, -3px) scale(1); }
+}
+
+.glyph-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.glyph-circle {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--accent-glow), transparent 70%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: glyphPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.95s;
+}
+
+@keyframes glyphPop {
+    from { opacity: 0; transform: scale(0.6); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.glyph {
+    width: 40px;
+    height: 40px;
+    stroke: var(--accent-1);
+    stroke-width: 3;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.glyph-path {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: draw 0.4s ease-out forwards;
+    animation-delay: 1.15s;
+}
+
+@keyframes draw {
+    to { stroke-dashoffset: 0; }
+}
+
+body[data-state="error"] .glyph-circle {
+    animation-name: glyphPopShake;
+}
+
+@keyframes glyphPopShake {
+    0%   { opacity: 0; transform: scale(0.6); }
+    60%  { opacity: 1; transform: scale(1.08) rotate(2deg); }
+    75%  { transform: scale(1) rotate(-2deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* Pending state: chips glow softly on a loop instead of settling,
+   and a radar-style ring pulses outward behind the envelope —
+   nothing has resolved yet, so nothing should feel fully at rest. */
+body[data-state="pending"] .chip {
+    animation:
+        chipIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+        chipGlow 2.2s ease-in-out infinite;
+    animation-delay:
+        calc(var(--i) * 0.05s),
+        calc(1s + var(--i) * 0.05s);
+}
+
+@keyframes chipGlow {
+    0%, 100% { opacity: 0.55; box-shadow: 0 0 6px var(--accent-glow); }
+    50%      { opacity: 1;    box-shadow: 0 0 14px var(--accent-glow); }
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 84px;
+    height: 84px;
+    margin: -42px 0 0 -42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent-1);
+    opacity: 0;
+    display: none;
+}
+
+body[data-state="pending"] .pulse-ring {
+    display: block;
+    animation: pulseOut 2.4s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+    animation-delay: 1s;
+}
+
+@keyframes pulseOut {
+    0%   { opacity: 0.5; transform: scale(0.8); }
+    70%  { opacity: 0; transform: scale(1.5); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* ============================================================
+   TEXT CONTENT
+   ============================================================ */
+.heading {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+}
+
+.subtext {
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0 0 6px;
+}
+
+.redirect-line {
+    color: var(--dim);
+    font-size: 13.5px;
+    margin: 22px 0 26px;
+}
+
+#countdown {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--accent-1);
+    min-width: 1.1em;
+    font-variant-numeric: tabular-nums;
+}
+
+#countdown.tick {
+    animation: tick 0.35s ease;
+}
+
+@keyframes tick {
+    0%   { transform: scale(1); }
+    35%  { transform: scale(1.28); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================================
+   BUTTON — matches dashboard's gradient CTA
+   ============================================================ */
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, var(--purple-1), var(--purple-2));
+    border: none;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.28);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.38);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+body[data-state="error"] .btn {
+    background: linear-gradient(90deg, var(--red), var(--red-2));
+    box-shadow: 0 8px 24px rgba(244, 63, 94, 0.28);
+}
+
+body[data-state="error"] .btn:hover {
+    box-shadow: 0 12px 30px rgba(244, 63, 94, 0.38);
+}
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .card, .chip, .glyph-circle, .glyph-path, .pulse-ring, #countdown.tick {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        stroke-dashoffset: 0 !important;
+    }
+    .pulse-ring { display: none !important; }
+}
+
+@media (max-width: 420px) {
+    .card { padding: 40px 24px 28px; }
+    .token-ring { width: 128px; height: 128px; }
+    .chip { transform: rotate(calc(var(--i) * 22.5deg)) translate(54px, -3px) scale(0.4); }
+}

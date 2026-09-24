@@ -1,0 +1,582 @@
+/* =========================================================
+   AI PROCESSING OVERLAY — STAGE ANIMATIONS
+   Depends on tokens defined in style.css (:root variables).
+   ========================================================= */
+
+/* ---------- Overlay shell ---------- */
+
+.ai-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s var(--ease-out), visibility 0.35s;
+}
+
+.ai-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ai-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 10, 22, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.ai-panel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.94));
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-4) var(--space-4);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(var(--color-primary-rgb), 0.08);
+  transform: translateY(14px) scale(0.98);
+  opacity: 0;
+  transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
+}
+
+.ai-overlay.is-visible .ai-panel {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* gradient border glow, sits behind the panel */
+.ai-panel::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0.5), rgba(var(--color-accent-rgb), 0.15), transparent 60%);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+/* ---------- Core orb + status ---------- */
+
+.ai-panel__core {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.ai-orb {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-orb::after {
+  content: "";
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  box-shadow: 0 0 18px rgba(var(--color-primary-rgb), 0.7);
+  animation: orb-breathe 2.2s var(--ease-in-out) infinite;
+}
+
+.ai-orb__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--color-primary-rgb), 0.45);
+  animation: orb-spin 3.6s linear infinite;
+}
+
+.ai-orb__ring--2 {
+  inset: 8px;
+  border-color: rgba(var(--color-accent-rgb), 0.4);
+  animation-duration: 2.4s;
+  animation-direction: reverse;
+}
+
+@keyframes orb-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(0.9); opacity: 0.85; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+
+.ai-panel__status {
+  width: 100%;
+}
+
+.ai-status-text {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--color-text);
+  min-height: 1.3em;
+}
+
+.ai-progress-track {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.14);
+  overflow: hidden;
+}
+
+.ai-progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--gradient-brand);
+  background-size: 200% 100%;
+  animation: gradient-shift 2.4s ease infinite;
+  transition: width 0.5s var(--ease-out);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.ai-progress-percent {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Stage viewport (cross-fade between stages) ---------- */
+
+.ai-stage-viewport {
+  position: relative;
+  min-height: 190px;
+}
+
+.ai-stage {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.ai-stage.is-active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
+
+/* ---------- Stage 1: Receiving prompt ---------- */
+
+.ai-prompt-preview {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+  max-height: 90px;
+  overflow: hidden;
+  box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0.5);
+  animation: prompt-glow 0.8s var(--ease-out);
+}
+
+@keyframes prompt-glow {
+  0% { box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0); }
+  40% { box-shadow: 0 0 22px 2px rgba(var(--color-primary-rgb), 0.45); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--color-primary-rgb), 0); }
+}
+
+.ai-particles {
+  position: relative;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.ai-particle {
+  position: absolute;
+  bottom: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0;
+  animation: particle-rise 1s var(--ease-out) forwards;
+}
+
+@keyframes particle-rise {
+  0% { opacity: 0; transform: translate(0, 12px) scale(0.6); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--drift, 0px), -26px) scale(1); }
+}
+
+/* ---------- Stage 2: Analyzing ---------- */
+
+.ai-scan-box {
+  position: relative;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  min-height: 90px;
+  overflow: hidden;
+}
+
+.ai-scan-beam {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-primary-rgb), 0.35), transparent);
+  animation: scan-sweep 1.6s linear infinite;
+}
+
+@keyframes scan-sweep {
+  0% { left: -30%; }
+  100% { left: 100%; }
+}
+
+.ai-scan-text {
+  position: relative;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  min-height: 3.2em;
+}
+
+.ai-scan-text .kw {
+  color: var(--color-primary);
+  font-weight: 600;
+  background: rgba(var(--color-primary-rgb), 0.12);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+/* ---------- Stage 3: Local optimization ---------- */
+
+.ai-token-compress {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+}
+
+.ai-token-line {
+  width: 100%;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-token-line::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 50%;
+  height: 8px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 999px;
+  width: 100%;
+  animation: line-compress 1.2s var(--ease-in-out) forwards;
+}
+
+@keyframes line-compress {
+  0% { width: 100%; opacity: 0.9; }
+  100% { width: 38%; opacity: 1; }
+}
+
+.ai-token-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.ai-token-counter span {
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ai-token-counter label {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+
+/* ---------- Stage 4: LLM optimization (neural core) ---------- */
+
+.ai-neural-core {
+  position: relative;
+  height: 150px;
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(var(--color-accent-rgb), 0.22), transparent 65%),
+    rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.ai-neural-node {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(var(--color-accent-rgb), 0.8);
+  animation: node-pulse 1.8s var(--ease-in-out) infinite;
+}
+
+@keyframes node-pulse {
+  0%, 100% { transform: scale(0.85); opacity: 0.6; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+.ai-neural-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-primary-rgb), 0.55), transparent);
+  transform-origin: left center;
+}
+
+.ai-neural-stream {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  animation: stream-travel 1.4s linear infinite;
+}
+
+@keyframes stream-travel {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- Stage 5: Benchmark ---------- */
+
+.ai-benchmark-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.ai-benchmark-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: center;
+}
+
+.ai-benchmark-card--accent {
+  border-color: rgba(var(--color-success-rgb), 0.4);
+  box-shadow: 0 0 18px rgba(var(--color-success-rgb), 0.12);
+}
+
+.ai-benchmark-card h4 {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ai-benchmark-card span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-benchmark-card--accent span {
+  color: var(--color-success);
+}
+
+.ai-benchmark-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.ai-benchmark-stats > div {
+  text-align: center;
+}
+
+.ai-benchmark-stats label {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 4px;
+}
+
+.ai-benchmark-stats span {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Stage 6: Completed ---------- */
+
+.ai-stage[data-stage="6"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ai-complete-check {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 10px;
+}
+
+.ai-complete-check svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ai-complete-check circle {
+  fill: none;
+  stroke: rgba(var(--color-success-rgb), 0.25);
+  stroke-width: 3;
+}
+
+.ai-complete-check path {
+  fill: none;
+  stroke: var(--color-success);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 36;
+  stroke-dashoffset: 36;
+  animation: check-draw 0.5s var(--ease-out) 0.15s forwards;
+}
+
+@keyframes check-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.ai-complete-check {
+  animation: check-glow 1.6s var(--ease-in-out) 0.4s;
+}
+
+@keyframes check-glow {
+  0% { filter: drop-shadow(0 0 0 rgba(var(--color-success-rgb), 0)); }
+  40% { filter: drop-shadow(0 0 14px rgba(var(--color-success-rgb), 0.55)); }
+  100% { filter: drop-shadow(0 0 0 rgba(var(--color-success-rgb), 0)); }
+}
+
+.ai-complete-label {
+  margin: 0 0 var(--space-3);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+.ai-final-prompt-box {
+  width: 100%;
+  text-align: left;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  max-height: 130px;
+  overflow-y: auto;
+}
+
+.ai-final-prompt-box p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  white-space: pre-wrap;
+}
+
+.ai-final-prompt-box .typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--color-primary);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: cursor-blink 0.9s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  50% { opacity: 0; }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 520px) {
+  .ai-panel {
+    padding: var(--space-4) var(--space-3) var(--space-3);
+  }
+  .ai-benchmark-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-scan-beam,
+  .ai-orb__ring,
+  .ai-orb::after,
+  .ai-progress-fill,
+  .ai-neural-node,
+  .ai-neural-stream {
+    animation: none !important;
+  }
+}
+.ai-cancel-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #999);
+  cursor: pointer;
+  font-size: 18px;
+}
+.ai-cancel-btn:hover { color: var(--text, #fff); }
+.ai-cancel-btn:disabled { opacity: 0.3; cursor: not-allowed; }

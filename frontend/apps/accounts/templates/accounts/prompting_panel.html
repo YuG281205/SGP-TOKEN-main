@@ -1,0 +1,918 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Token Optimizer | Prompting Panel</title>
+
+    <!-- ================= FONTS ================= -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- ================= FONT AWESOME ================= -->
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- ================= CSS ================= -->
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/prompting.css' %}"
+    >
+
+    {% comment %} <link
+        rel="stylesheet"
+        href="{% static 'css/animation2.css' %}"
+    > {% endcomment %}
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/auth-shared.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/navbar.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVBAR
+====================================================== -->
+
+<header class="navbar">
+
+    <div class="logo-section">
+
+        <h2>
+            AI Token Optimizer
+        </h2>
+
+    </div>
+
+
+    <div class="user-section">
+
+        <span>
+            Welcome,
+            <strong id="username">
+                User
+            </strong>
+        </span>
+
+        <button
+            id="logoutBtn"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN CONTAINER
+====================================================== -->
+
+<div class="container">
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside class="sidebar">
+
+        <ul>
+
+            <!-- Prompting Panel -->
+
+            <li class="active">
+
+                <a href="{% url 'prompting_panel' %}">
+
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                    Prompting Panel
+
+                </a>
+
+            </li>
+
+
+            <!-- Dashboard -->
+
+            <li>
+
+                <a href="{% url 'dashboard' %}">
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Dashboard
+
+                </a>
+
+            </li>
+
+
+            <!-- History -->
+
+            <li>
+
+                <a href="{% url 'history_page' %}">
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+
+                    History
+
+                </a>
+
+            </li>
+
+
+            <!-- Prompt Analysis -->
+
+            <li>
+
+                <a href="{% url 'prompt-analysis' %}">
+
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+
+                    Prompt Analysis
+
+                </a>
+
+            </li>
+
+
+            <!-- Analytics -->
+
+            <li>
+
+                <a href="{% url 'analytics' %}">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                    Analytics
+
+                </a>
+
+            </li>
+
+
+            <!-- Comparison -->
+
+            <li>
+
+                <a href="{% url 'comparison' %}">
+
+                    <i class="fa-solid fa-scale-balanced"></i>
+
+                    Comparison
+
+                </a>
+
+            </li>
+
+
+            <!-- Settings -->
+
+            <li>
+
+                <a href="#">
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    Settings
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="content">
+
+
+        <!-- =================================================
+             WELCOME
+        ================================================== -->
+
+        <section class="welcome-card">
+
+            <h1>
+
+                Hello,
+                <span id="welcomeUser">
+                    User
+                </span>
+                👋
+
+            </h1>
+
+            <p>
+
+                Optimize your AI prompts and get the
+                optimized version immediately.
+
+            </p>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ORIGINAL PROMPT
+        ================================================== -->
+
+        <section class="prompt-section">
+
+            <h2>
+                Original Prompt
+            </h2>
+
+            <textarea
+                id="prompt"
+                rows="10"
+                placeholder="Enter your prompt here..."
+            ></textarea>
+
+
+            <div class="char-count-row">
+
+                <span
+                    class="char-count"
+                    id="promptCharCount"
+                >
+                    0 characters
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             AI MODEL
+        ================================================== -->
+
+        <section class="model-section">
+
+            <label>
+                Select AI Model
+            </label>
+
+
+            <!-- Custom Select -->
+
+            <div
+                class="custom-select"
+                id="modelCustomSelect"
+            >
+
+                <button
+                    type="button"
+                    class="custom-select-trigger"
+                    id="modelTrigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                >
+
+                    <span
+                        class="custom-select-value is-placeholder"
+                        id="modelTriggerLabel"
+                    >
+                        Choose Model
+                    </span>
+
+
+                    <svg
+                        class="custom-select-arrow"
+                        viewBox="0 0 20 20"
+                        width="16"
+                        height="16"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M5.5 7.5l4.5 4.5 4.5-4.5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </button>
+
+
+                <ul
+                    class="custom-select-list"
+                    id="modelList"
+                    role="listbox"
+                    tabindex="-1"
+                >
+
+                    <li
+                        class="custom-select-option is-selected"
+                        role="option"
+                        data-value=""
+                        aria-selected="true"
+                        tabindex="-1"
+                    >
+                        Choose Model
+                    </li>
+
+
+                    <li
+                        class="custom-select-option"
+                        role="option"
+                        data-value="gemini"
+                        aria-selected="false"
+                        tabindex="-1"
+                    >
+                        Gemini
+                    </li>
+
+
+                    <li
+                        class="custom-select-option"
+                        role="option"
+                        data-value="ollama"
+                        aria-selected="false"
+                        tabindex="-1"
+                    >
+                        Ollama
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- Hidden select used by prompting_panel.js -->
+
+            <select
+                id="model"
+                class="visually-hidden-select"
+                tabindex="-1"
+                aria-hidden="true"
+            >
+
+                <option value="">
+                    Choose Model
+                </option>
+
+                <option value="gemini">
+                    Gemini
+                </option>
+
+                <option value="ollama">
+                    Ollama
+                </option>
+
+            </select>
+
+        </section>
+
+
+
+        <!-- =================================================
+             OPTIMIZATION LEVEL
+        ================================================== -->
+
+        <section class="optimization-section">
+
+            <h3>
+                Optimization Level
+            </h3>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="optimization"
+                    value="light"
+                >
+
+                Light
+
+            </label>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="optimization"
+                    value="balanced"
+                    checked
+                >
+
+                Balanced
+
+            </label>
+
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="optimization"
+                    value="aggressive"
+                >
+
+                Aggressive
+
+            </label>
+
+        </section>
+
+
+
+        <!-- =================================================
+             BUTTONS
+        ================================================== -->
+
+        <section class="button-section">
+
+            <button
+                id="optimizeBtn"
+                type="button"
+            >
+                Optimize Prompt
+            </button>
+
+
+            <button
+                id="clearBtn"
+                type="button"
+            >
+                Clear
+            </button>
+
+        </section>
+
+
+
+        
+        <!-- =================================================
+             OPTIMIZED PROMPT
+        ================================================== -->
+
+        <section class="result-section">
+
+            <h2>
+                Optimized Prompt
+            </h2>
+
+
+            <textarea
+                id="optimizedPrompt"
+                rows="10"
+                placeholder="Your optimized prompt will appear here..."
+                readonly
+            ></textarea>
+
+
+            <div class="char-count-row">
+
+                <span
+                    class="char-count"
+                    id="optimizedPromptCharCount"
+                >
+                    0 characters
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <button
+                    id="copyBtn"
+                    type="button"
+                >
+                    Copy
+                </button>
+
+
+                <button
+                    id="downloadBtn"
+                    type="button"
+                >
+                    Download
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             INFORMATION
+        ================================================== -->
+
+        <section class="history-section">
+
+            <h2>
+                How Prompting Works
+            </h2>
+
+
+            <ol>
+
+                <li>
+                    Enter your original prompt.
+                </li>
+
+                <li>
+                    Select the AI model.
+                </li>
+
+                <li>
+                    Select the optimization level.
+                </li>
+
+                <li>
+                    Click Optimize Prompt.
+                </li>
+
+                <li>
+                    The optimized prompt is returned immediately.
+                </li>
+
+                <li>
+                    Token calculations and evaluation
+                    continue in the background.
+                </li>
+
+            </ol>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     AI PROCESSING OVERLAY
+====================================================== -->
+
+<div
+    id="aiOverlay"
+    class="ai-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-live="polite"
+    aria-label="Optimizing your prompt"
+>
+
+    <div class="ai-overlay__backdrop"></div>
+
+
+    <div class="ai-panel">
+
+
+        <!-- Cancel -->
+
+        <button
+            type="button"
+            id="aiCancelBtn"
+            class="ai-cancel-btn"
+            aria-label="Cancel optimization"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+
+        <!-- Core -->
+
+        <div class="ai-panel__core">
+
+            <div class="ai-orb">
+
+                <span class="ai-orb__ring"></span>
+
+                <span
+                    class="ai-orb__ring ai-orb__ring--2"
+                ></span>
+
+            </div>
+
+
+            <div class="ai-panel__status">
+
+                <p
+                    class="ai-status-text"
+                    id="aiStatusText"
+                >
+                    Receiving prompt...
+                </p>
+
+
+                <div class="ai-progress-track">
+
+                    <div
+                        class="ai-progress-fill"
+                        id="aiProgressFill"
+                    ></div>
+
+                </div>
+
+
+                <span
+                    class="ai-progress-percent"
+                    id="aiProgressPercent"
+                >
+                    0%
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Stage Viewport -->
+
+        <div
+            class="ai-stage-viewport"
+            id="aiStageViewport"
+        >
+
+
+            <!-- Stage 1 -->
+
+            <div
+                class="ai-stage is-active"
+                data-stage="1"
+            >
+
+                <div
+                    class="ai-prompt-preview"
+                    id="stage1PromptPreview"
+                ></div>
+
+                <div
+                    class="ai-particles"
+                    id="stage1Particles"
+                ></div>
+
+            </div>
+
+
+
+            <!-- Stage 2 -->
+
+            <div
+                class="ai-stage"
+                data-stage="2"
+            >
+
+                <div class="ai-scan-box">
+
+                    <div class="ai-scan-beam"></div>
+
+                    <p
+                        class="ai-scan-text"
+                        id="stage2Text"
+                    ></p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Stage 3 -->
+
+            <div
+                class="ai-stage"
+                data-stage="3"
+            >
+
+                <div class="ai-token-compress">
+
+                    <div class="ai-token-line"></div>
+
+                    <div class="ai-token-counter">
+
+                        <span id="liveTokenCount">
+                            0
+                        </span>
+
+                        <label>
+                            tokens
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Stage 4 -->
+
+            <div
+                class="ai-stage"
+                data-stage="4"
+            >
+
+                <div
+                    class="ai-neural-core"
+                    id="neuralCore"
+                ></div>
+
+            </div>
+
+
+
+            <!-- Stage 5 -->
+
+            <div
+                class="ai-stage"
+                data-stage="5"
+            >
+
+                <div class="ai-benchmark-cards">
+
+                    <div class="ai-benchmark-card">
+
+                        <h4>
+                            Original tokens
+                        </h4>
+
+                        <span id="benchOriginal">
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="ai-benchmark-card ai-benchmark-card--accent"
+                    >
+
+                        <h4>
+                            Optimized tokens
+                        </h4>
+
+                        <span id="benchOptimized">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ai-benchmark-stats">
+
+                    <div>
+
+                        <label>
+                            Tokens saved
+                        </label>
+
+                        <span id="benchSaved">
+                            0
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Processing time
+                        </label>
+
+                        <span id="benchTime">
+                            0.00s
+                        </span>
+
+                    </div>
+
+
+                    <div>
+
+                        <label>
+                            Cost saved
+                        </label>
+
+                        <span id="benchCost">
+                            $0.00
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Stage 6 -->
+
+            <div
+                class="ai-stage"
+                data-stage="6"
+            >
+
+                <div class="ai-complete-check">
+
+                    <svg viewBox="0 0 52 52">
+
+                        <circle
+                            cx="26"
+                            cy="26"
+                            r="24"
+                        ></circle>
+
+                        <path
+                            d="M14 27l7 7 16-16"
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <p class="ai-complete-label">
+                    Optimization complete
+                </p>
+
+
+                <div class="ai-final-prompt-box">
+
+                    <p id="finalPromptTyped"></p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script src="{% static 'js/custom-select.js' %}"></script>
+
+{% comment %} <script src="{% static 'js/animation2.js' %}"></script> {% endcomment %}
+
+<script src="{% static 'js/cursor.js' %}"></script>
+
+<script src="{% static 'js/prompting_panel.js' %}"></script>
+
+
+</body>
+
+</html>

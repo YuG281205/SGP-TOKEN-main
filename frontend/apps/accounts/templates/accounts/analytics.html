@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Token Optimizer | Analytics</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth-shared.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+
+        <div class="logo-section">
+            <h2>AI Token Optimizer</h2>
+        </div>
+
+        <div class="user-section">
+            <span>Welcome, <strong id="username">User</strong></span>
+            <button id="logoutBtn">Logout</button>
+        </div>
+
+    </header>
+
+    <!-- ================= MAIN ================= -->
+    <div class="container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <ul>
+                     <!-- Prompting Panel -->
+
+                <li>
+
+                    <a href="{% url 'prompting_panel' %}">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        Prompting Panel
+
+                    </a>
+
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fa-solid fa-house"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'history_page' %}">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        History
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'prompt-analysis' %}">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Prompt Analysis
+                    </a>
+                </li>
+
+                <li class="active">
+                    <a href="{% url 'analytics' %}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li>
+                    <a href="{%url 'comparison'%}">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        Comparison
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+
+            </ul>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+
+            <!-- ================= ANALYTICS HEADER ================= -->
+            <section class="analytics-header">
+
+                <div>
+                    <h1>Analytics Dashboard</h1>
+                    <p>
+                        Track token usage, optimization performance,
+                        cost savings, and overall system efficiency.
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- ================= OVERVIEW CARDS ================= -->
+            <section class="overview-section">
+
+                <div class="card-grid">
+
+                    <!-- Card 1 -->
+                    <div class="analytics-card">
+                        <div class="card-icon blue">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Total Optimizations</h4>
+                            <h2 id="totalOptimizations">0</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="analytics-card">
+                        <div class="card-icon purple">
+                            <i class="fa-solid fa-coins"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Total Token Usage</h4>
+                            <h2 id="totalTokenUsage">0</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="analytics-card">
+                        <div class="card-icon green">
+                            <i class="fa-solid fa-scissors"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Tokens Saved</h4>
+                            <h2 id="totalTokensSaved">0</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="analytics-card">
+                        <div class="card-icon orange">
+                            <i class="fa-solid fa-percent"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Average Reduction</h4>
+                            <h2 id="averageReduction">0%</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="analytics-card">
+                        <div class="card-icon cyan">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Optimized Tokens</h4>
+                            <h2 id="totalOptimizedTokens">0</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="analytics-card">
+                        <div class="card-icon red">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Total Cost Saved</h4>
+                            <h2 id="totalCostSaved">$0.00</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 7 -->
+                    <div class="analytics-card">
+                        <div class="card-icon yellow">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Success Rate</h4>
+                            <h2 id="successRate">0%</h2>
+                        </div>
+                    </div>
+
+                    <!-- Card 8 -->
+                    <div class="analytics-card">
+                        <div class="card-icon dark">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Average Processing Time</h4>
+                            <h2 id="averageProcessingTime">0 sec</h2>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ================= PERFORMANCE ANALYTICS ================= -->
+            <section class="charts-section">
+
+                <div class="section-title">
+                    <h2>Performance Analytics</h2>
+                    <p>
+                        Visualize token optimization trends and system performance.
+                    </p>
+                </div>
+
+                <!-- Top Large Chart -->
+                <div class="chart-card full-width">
+                    <div class="card-header">
+                        <h3>Token Usage Analysis</h3>
+                        <span>Original vs Optimized Tokens</span>
+                    </div>
+                    <div class="chart-container chart-container--large">
+                        <canvas id="tokenUsageChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Bottom Charts -->
+                <div class="chart-grid">
+
+                    <!-- Model Usage -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>AI Model Usage</h3>
+                            <span>Requests by Model</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="modelUsageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Optimization Levels -->
+                    <div class="chart-card">
+                        <div class="card-header">
+                            <h3>Optimization Levels</h3>
+                            <span>Light / Balanced / Aggressive</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="optimizationLevelChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="chart-card full-width">
+                    <div class="card-header">
+                        <h3>Token Saving Trend</h3>
+                        <span>Daily Performance</span>
+                    </div>
+                    <div class="chart-container chart-container--large">
+                        <canvas id="dateSavingsChart"></canvas>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ================= AI INSIGHTS ================= -->
+            <section class="insights-section">
+
+                <div class="section-title">
+                    <h2>AI Optimization Insights</h2>
+                    <p>
+                        Key insights generated from your prompt optimization history.
+                    </p>
+                </div>
+
+                <div class="insights-grid">
+
+                    <!-- Insight 1 -->
+                    <div class="insight-card">
+                        <div class="insight-icon blue">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Best Optimization Level</h4>
+                            <p id="bestOptimizationLevel">--</p>
+                        </div>
+                    </div>
+
+                    <!-- Insight 2 -->
+                    <div class="insight-card">
+                        <div class="insight-icon green">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Most Used AI Model</h4>
+                            <p id="mostUsedModel">--</p>
+                        </div>
+                    </div>
+
+                    <!-- Insight 3 -->
+                    <div class="insight-card">
+                        <div class="insight-icon orange">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Highest Cost Saving</h4>
+                            <p id="highestCostSaving">$0.00</p>
+                        </div>
+                    </div>
+
+                    <!-- Insight 4 -->
+                    <div class="insight-card">
+                        <div class="insight-icon purple">
+                            <i class="fa-solid fa-scissors"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Average Tokens Saved</h4>
+                            <p id="averageTokensSaved">0 Tokens</p>
+                        </div>
+                    </div>
+
+                    <!-- Insight 5 -->
+                    <div class="insight-card">
+                        <div class="insight-icon cyan">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Fastest Optimization</h4>
+                            <p id="fastestOptimization">0 sec</p>
+                        </div>
+                    </div>
+
+                    <!-- Insight 6 -->
+                    <div class="insight-card">
+                        <div class="insight-icon red">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Total Successful Requests</h4>
+                            <p id="successfulRequests">0</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ================= RECENT ACTIVITY ================= -->
+            <section class="activity-section">
+
+                <div class="section-title">
+                    <h2>Recent Optimization Activity</h2>
+                    <p>
+                        Review your latest optimized prompts and their performance.
+                    </p>
+                </div>
+
+                <div class="activity-card">
+
+                    <table class="activity-table">
+
+                        <thead>
+                            <tr>
+                                <th>Prompt</th>
+                                <th>AI Model</th>
+                                <th>Level</th>
+                                <th>Original</th>
+                                <th>Optimized</th>
+                                <th>Saved</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recentActivityBody">
+                            <tr>
+                                <td colspan="9" class="empty-state">
+                                    No optimization history available.
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/cursor.js' %}"></script>
+    <script src="{% static 'js/analytics.js' %}"></script>
+
+</body>
+</html>

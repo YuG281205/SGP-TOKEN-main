@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AI Token Optimizer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/auth-shared.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+
+    <div class="auth-shell reverse login-shell">
+
+        <div class="brand-panel">
+            <div>
+                <div class="brand-mark"><span class="dot"></span>AI Token Optimizer</div>
+
+                <div class="brand-copy">
+                    <h1>Welcome back —<br><span>your prompts missed you.</span></h1>
+                    <p>
+                        Pick up where you left off. Your optimization history, favorites,
+                        and saved token metrics are right where you left them.
+                    </p>
+                </div>
+
+                <div class="token-reel" aria-hidden="true">
+                    <div class="reel-lane lane-1"></div>
+                    <div class="reel-lane lane-2"></div>
+                    <div class="reel-readout">optimizing… <strong>0 tokens saved</strong></div>
+                </div>
+
+                <div class="stat-row">
+                    <div class="stat-chip">
+                        <div class="label">Processing time</div>
+                        <div class="value">0.4s avg</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="label">Uptime</div>
+                        <div class="value">99.9%</div>
+                    </div>
+                    <div class="stat-chip">
+                        <div class="label">Status</div>
+                        <div class="value accent">Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="brand-foot">Built for SGP — prompt optimization made practical.</div>
+        </div>
+
+        <div class="form-panel">
+            <div class="auth-card">
+                <h2>Log in</h2>
+                <p class="sub">Enter your details to access your dashboard.</p>
+
+                <form id="loginForm">
+
+                    <div class="field">
+                        <label for="Username">Username</label>
+                        <input type="text" id="Username" name="Username" placeholder="yourname" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="Password">Password</label>
+                        <input type="password" id="Password" name="Password" placeholder="••••••••" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+
+                <div class="switch-line">
+                    New here? <a href="{% url 'signup' %}">Sign up here</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="{% static 'js/cursor.js' %}"></script>
+    <script src="{% static 'js/login.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,571 @@
+/* =========================================================
+   AI Token Optimizer — Analytics
+   Navbar, sidebar, and color tokens come from
+   auth-shared.css + navbar.css (shared across every page).
+   This file holds analytics-page-specific styling:
+   overview cards, charts, insights, activity table.
+
+   Every surface here is genuine frosted glass — background +
+   backdrop-filter blur — sitting on the warm blurred backdrop
+   painted by body::before in auth-shared.css. Accents stay
+   inside the amber / teal / coral family already established
+   by the shared theme; nothing violet or cool-blue is introduced.
+
+   Load this AFTER style.css, auth-shared.css, navbar.css.
+   ========================================================= */
+
+:root {
+  /* Icon / chart accent set — every hue is a tint drawn from the
+     amber+teal core so new colors never fight the shared palette. */
+  --accent-amber: var(--amber);           /* #ff9f5b */
+  --accent-amber-dim: var(--amber-glow);
+  --accent-gold: #f0c26b;
+  --accent-gold-dim: rgba(240, 194, 107, 0.16);
+  --accent-teal: var(--teal);             /* #2ed8a0 */
+  --accent-teal-dim: var(--teal-dim);
+  --accent-seafoam: #57d9c9;
+  --accent-seafoam-dim: rgba(87, 217, 201, 0.16);
+  --accent-coral: var(--coral);           /* #ff6b6b */
+  --accent-coral-dim: rgba(255, 107, 107, 0.16);
+  --accent-sand: #d9c9a3;
+  --accent-sand-dim: rgba(217, 201, 163, 0.14);
+
+  --panel-3: rgba(255, 255, 255, 0.05);
+  --ink-dim: #d8d5cd;
+
+  /* Glass surface used behind chart canvases specifically —
+     a touch lighter than the card itself so it reads as an
+     inset pane of glass sitting inside the card's glass. */
+  --chart-glass-bg-top: rgba(255, 255, 255, 0.06);
+  --chart-glass-bg-bottom: rgba(255, 255, 255, 0.02);
+  --chart-glass-border: rgba(255, 255, 255, 0.09);
+  --chart-glass-blur: 16px;
+}
+
+/* ---------- page header ---------- */
+
+.analytics-header {
+  margin-bottom: 28px;
+}
+
+.analytics-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.analytics-header p {
+  color: var(--mist);
+  font-size: 14.5px;
+  margin-top: 8px;
+  max-width: 560px;
+  line-height: 1.55;
+}
+
+.section-title {
+  margin-bottom: 18px;
+}
+
+.section-title h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.section-title p {
+  color: var(--mist);
+  font-size: 13.5px;
+  margin-top: 5px;
+}
+
+.content section + section {
+  margin-top: 40px;
+}
+
+/* ---------- glass surface (shared mixin-like base) ---------- */
+
+.analytics-card,
+.chart-card,
+.insight-card,
+.activity-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: inset 0 1px 0 var(--glass-sheen);
+}
+
+/* ---------- overview cards ---------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.analytics-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+
+.analytics-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--panel-border-strong);
+  box-shadow: 0 16px 32px -20px rgba(0, 0, 0, 0.55), inset 0 1px 0 var(--glass-sheen);
+}
+
+.card-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.card-icon.blue    { color: var(--accent-seafoam); background: var(--accent-seafoam-dim); }
+.card-icon.purple  { color: var(--accent-gold);     background: var(--accent-gold-dim); }
+.card-icon.green   { color: var(--accent-teal);     background: var(--accent-teal-dim); }
+.card-icon.orange  { color: var(--accent-amber);    background: var(--accent-amber-dim); }
+.card-icon.cyan    { color: var(--accent-seafoam);  background: var(--accent-seafoam-dim); }
+.card-icon.red     { color: var(--accent-coral);    background: var(--accent-coral-dim); }
+.card-icon.yellow  { color: var(--accent-gold);     background: var(--accent-gold-dim); }
+.card-icon.dark    { color: var(--mist);            background: var(--panel-3); }
+
+.card-content h4 {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--mist);
+  text-transform: uppercase;
+}
+
+.card-content h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 4px;
+  color: var(--ink);
+}
+
+/* ---------- charts ---------- */
+
+.charts-section .chart-card {
+  border-radius: var(--radius-lg);
+  padding: 20px 22px 22px;
+  margin-bottom: 16px;
+  transition: border-color 0.18s var(--ease);
+}
+
+.charts-section .chart-card:hover {
+  border-color: var(--panel-border-strong);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  min-width: 0;
+}
+
+.chart-grid .chart-card {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.chart-card {
+  min-width: 0;
+}
+
+.chart-card.full-width {
+  min-width: 0;
+}
+
+.card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.card-header h3 {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.card-header span {
+  font-size: 12.5px;
+  color: var(--mist-dim);
+  font-family: var(--font-mono);
+}
+
+/* ---------- chart containers ---------- */
+/* Chart.js canvases have an intrinsic pixel width/height. Inside a
+   CSS grid, grid items default to min-width: auto, which means that
+   intrinsic canvas size becomes the track's minimum size — forcing
+   the grid (and the whole page) wider than the viewport instead of
+   respecting the 1fr columns. min-width: 0 on every level between
+   the grid and the canvas stops that from happening.
+
+   Each container is now its own inset pane of glass — a subtle
+   top-to-bottom gradient, a soft border, blur, and an inner sheen —
+   so every chart sits on visible frosted glass rather than bare
+   transparent space inside the card. */
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+
+  background: linear-gradient(180deg, var(--chart-glass-bg-top), var(--chart-glass-bg-bottom));
+  border: 1px solid var(--chart-glass-border);
+  backdrop-filter: blur(var(--chart-glass-blur));
+  -webkit-backdrop-filter: blur(var(--chart-glass-blur));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -12px 24px -18px rgba(0, 0, 0, 0.5);
+}
+
+/* soft radial sheen, sits behind the canvas, gives the pane a
+   glassy highlight instead of a flat gradient */
+.chart-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chart-container--large {
+  height: 340px;
+}
+
+.chart-container canvas {
+  position: relative;
+  z-index: 1;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  display: block;
+}
+
+.main-content,
+.content {
+  min-width: 0;
+}
+
+.charts-section {
+  min-width: 0;
+}
+
+/* ---------- insights ---------- */
+
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.insight-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: transform 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.insight-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--panel-border-strong);
+}
+
+.insight-icon {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.insight-icon.blue    { color: var(--accent-seafoam); background: var(--accent-seafoam-dim); }
+.insight-icon.green   { color: var(--accent-teal);     background: var(--accent-teal-dim); }
+.insight-icon.orange  { color: var(--accent-amber);    background: var(--accent-amber-dim); }
+.insight-icon.purple  { color: var(--accent-gold);     background: var(--accent-gold-dim); }
+.insight-icon.cyan    { color: var(--accent-seafoam);  background: var(--accent-seafoam-dim); }
+.insight-icon.red     { color: var(--accent-coral);    background: var(--accent-coral-dim); }
+
+.insight-content h4 {
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--mist);
+}
+
+.insight-content p {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 4px;
+}
+
+/* ---------- activity table ---------- */
+
+.activity-card {
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  overflow-x: auto;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+.activity-table thead th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mist-dim);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.activity-table tbody td {
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--ink-dim);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.activity-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.activity-table tbody tr:hover td {
+  background: var(--panel-2);
+  color: var(--ink);
+}
+
+/* status pills inside the activity table */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+.status-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-pill.success,
+.status-pill.completed {
+  color: var(--accent-teal);
+  background: var(--accent-teal-dim);
+}
+
+.status-pill.failed,
+.status-pill.error {
+  color: var(--accent-coral);
+  background: var(--accent-coral-dim);
+}
+
+.status-pill.pending,
+.status-pill.processing {
+  color: var(--accent-gold);
+  background: var(--accent-gold-dim);
+}
+
+.activity-table .empty-state {
+  text-align: center;
+  color: var(--mist-dim);
+  padding: 30px 16px;
+  white-space: normal;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1180px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .insights-grid { grid-template-columns: repeat(2, 1fr); }
+  .chart-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .insights-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .analytics-card, .insight-card, .charts-section .chart-card { transition: none; }
+}
+/* ==========================================
+   AI MODEL FILTER
+========================================== */
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.card-title{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.card-title h3{
+    margin:0;
+    font-size:18px;
+    font-weight:700;
+    color:#fff;
+}
+
+.card-title span{
+    font-size:13px;
+    color:rgba(255,255,255,.65);
+}
+
+.chart-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.chart-filter-label{
+    font-size:13px;
+    color:rgba(255,255,255,.75);
+    font-weight:500;
+}
+
+/* Dropdown */
+
+.chart-filter{
+
+    min-width:180px;
+
+    padding:10px 16px;
+
+    border-radius:14px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+    color:#fff;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    cursor:pointer;
+
+    transition:.3s ease;
+
+    outline:none;
+
+}
+
+/* Hover */
+
+.chart-filter:hover{
+
+    border-color:#ff7a18;
+
+    box-shadow:
+    0 0 20px rgba(255,122,24,.18);
+
+}
+
+/* Focus */
+
+.chart-filter:focus{
+
+    border-color:#ff7a18;
+
+    box-shadow:
+    0 0 0 4px rgba(255,122,24,.15);
+
+}
+
+/* Options */
+
+.chart-filter option{
+
+    background:#171717;
+
+    color:#fff;
+
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    .card-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+    .chart-actions{
+
+        width:100%;
+
+    }
+
+    .chart-filter{
+
+        width:100%;
+
+    }
+
+}

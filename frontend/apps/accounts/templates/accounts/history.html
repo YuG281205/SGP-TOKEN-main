@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Token Optimizer | History</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth-shared.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+
+        <div class="logo-section">
+            <h2>AI Token Optimizer</h2>
+        </div>
+
+        <div class="user-section">
+            <span>Welcome, <strong id="username">User</strong></span>
+            <button id="logoutBtn">Logout</button>
+        </div>
+
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <div class="container">
+
+        <!-- ============== SIDEBAR ============== -->
+        <aside class="sidebar">
+
+            <ul>
+                     <!-- Prompting Panel -->
+
+                <li>
+
+                    <a href="{% url 'prompting_panel' %}">
+
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                        Prompting Panel
+
+                    </a>
+
+                </li>
+
+                <li>
+                    <a href="{% url 'dashboard' %}">
+                        <i class="fa-solid fa-house"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="active">
+                    <a href="{% url 'history_page' %}">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        History
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'prompt-analysis' %}">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Prompt Analysis
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'analytics' %}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Analytics
+                    </a>
+                </li>
+                <li class=>
+                    <a href="{%url 'comparison'%}">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        Comparison
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+
+            </ul>
+
+        </aside>
+
+        <!-- ============== MAIN CONTENT ============== -->
+        <main class="content">
+
+            <div class="header">
+                <h1>Prompt History</h1>
+                <p>Every optimization run, with the full before/after on demand.</p>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Date</th>
+                            <th>Model</th>
+                            <th>Tokens Saved</th>
+                            <th>Cost Saved</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="7" style="text-align:center;">
+                                Loading history…
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- ===================================================== -->
+    <!-- MODAL                                                  -->
+    <!-- ===================================================== -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+
+            <div class="modal-head">
+                <div>
+                    <h2>Optimization Detail</h2>
+                    <p class="modal-subtitle" id="createdAt"></p>
+                </div>
+                <span class="close">&times;</span>
+            </div>
+
+            <!-- meta chips: model / level / status / time -->
+            <div class="meta-row">
+                <span class="chip">
+                    <span class="chip-label">Model</span>
+                    <span class="chip-value" id="modelName"></span>
+                </span>
+                <span class="chip">
+                    <span class="chip-label">Level</span>
+                    <span class="chip-value" id="optimizationLevel"></span>
+                </span>
+                <span class="chip">
+                    <span class="chip-label">Time</span>
+                    <span class="chip-value" id="processingTime"></span>
+                </span>
+                <span class="chip chip-status">
+                    <span class="chip-label">Status</span>
+                    <span class="chip-value" id="status"></span>
+                </span>
+            </div>
+
+            <!-- compact stat grid instead of a tall stats table -->
+            <div class="section">
+                <h3>Token Usage</h3>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">Original In</span>
+                        <span class="stat-value" id="originalInputTokens"></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Original Out</span>
+                        <span class="stat-value" id="originalOutputTokens"></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Original Total</span>
+                        <span class="stat-value" id="originalTotalTokens"></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Optimized In</span>
+                        <span class="stat-value" id="optimizedInputTokens"></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Optimized Out</span>
+                        <span class="stat-value" id="optimizedOutputTokens"></span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Optimized Total</span>
+                        <span class="stat-value" id="optimizedTotalTokens"></span>
+                    </div>
+                    <div class="stat-card stat-highlight">
+                        <span class="stat-label">Tokens Saved</span>
+                        <span class="stat-value" id="tokensSaved"></span>
+                    </div>
+                    <div class="stat-card stat-highlight">
+                        <span class="stat-label">Cost Saved</span>
+                        <span class="stat-value" id="costSaved"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- prompts side-by-side, each with its own internal scroll -->
+            <div class="section">
+                <h3>Prompts</h3>
+                <div class="prompt-grid">
+                    <div class="prompt-col">
+                        <label for="originalPrompt">Original</label>
+                        <textarea id="originalPrompt" readonly></textarea>
+                    </div>
+                    <div class="prompt-col">
+                        <label for="optimizedPrompt">Optimized</label>
+                        <textarea id="optimizedPrompt" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'js/cursor.js' %}"></script>
+    <script src="{% static 'js/history.js' %}"></script>
+</body>
+</html>

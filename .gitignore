@@ -1,0 +1,43 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+**/.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/node_modules/
+npm-debug.log
+yarn-error.log
+
+# Django
+*.sqlite3
+db.sqlite3
+staticfiles/
+media/
+
+# Playwright
+playwright_profile*/
+playwright_output_*/
+*.har
+*.zip
+
+# Screenshots (optional)
+*.png
+
+# Logs (optional)
+*.log
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verified | AI Token Optimizer</title>
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+</head>
+<body data-state="success" data-redirect="/login/" data-seconds="10">
+
+    <div class="card">
+
+        <div class="token-ring" id="tokenRing">
+            <div class="glyph-wrap">
+                <div class="glyph-circle">
+                    <svg class="glyph" viewBox="0 0 24 24">
+                        <path class="glyph-path" d="M4 12.5l4.5 4.5L20 6" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="heading">Email verified</h1>
+        <p class="subtext">Your account is active and ready to use.</p>
+
+        <p class="redirect-line">
+            Redirecting to login in <span id="countdown">10</span>s
+        </p>
+
+        <a class="btn" href="/login/">Log in now</a>
+
+    </div>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

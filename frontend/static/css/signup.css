@@ -1,0 +1,20 @@
+/* Signup page doubles as the product home page — slightly more
+   emphasis on the brand panel since it's the first thing visitors see. */
+
+.signup-shell .brand-copy h1 span {
+  color: var(--violet);
+}
+
+.signup-shell .badge-home {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: var(--teal-dim);
+  border: 1px solid rgba(46, 216, 160, 0.3);
+  padding: 5px 10px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}

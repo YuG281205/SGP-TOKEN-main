@@ -1,0 +1,232 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Token Optimizer | Stop paying for filler tokens</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/token-optimizer.css' %}">
+<link rel="stylesheet" href="{% static 'css/text-spotlight.css' %}">
+
+</head>
+<body>
+
+<div class="lp-progress" id="lpProgress"></div>
+
+<!-- INDEX RAIL -->
+<nav class="lp-index" id="lpIndex">
+  <a href="#optimize" data-label="Optimize" class="active"></a>
+  <a href="#history" data-label="History"></a>
+  <a href="#analysis" data-label="Prompt Analysis"></a>
+  <a href="#analytics" data-label="Analytics"></a>
+  <a href="#comparison" data-label="Comparison"></a>
+</nav>
+
+<!-- NAV -->
+<header class="lp-nav">
+  <div class="lp-nav__logo"><span class="dot"></span><span>AI Token Optimizer</span></div>
+  <a class="lp-nav__cta" href="{% url 'login' %}">Log in</a>
+</header>
+
+<!-- HERO -->
+<section class="lp-hero" id="lpHero">
+  <div class="lp-hero__depth" aria-hidden="true">
+  <span class="lp-orbit lp-orbit--one"></span>
+  <span class="lp-orbit lp-orbit--two"></span>
+  <span class="lp-cube"><i></i><i></i><i></i></span>
+</div>
+  <div class="lp-hero__spotlight" id="lpSpotlight"></div>
+
+  <div class="lp-hero__eyebrow">Prompt optimization, before it costs you</div>
+
+  <h1 id="heroTitle">Same intent. <em>Fewer tokens.</em> Lower bill.</h1>
+
+  <p class="lead" id="heroLead">
+    Paste a prompt, pick Gemini or Ollama, choose how aggressively to cut —
+    and watch it come back leaner without losing what it was asking for.
+  </p>
+
+  <div class="lp-hero__actions">
+    <a class="lp-btn-primary" href="{% url 'login' %}">Start optimizing</a>
+    <a class="lp-btn-ghost" href="#optimize">See how it works</a>
+  </div>
+
+  <div class="lp-readout">
+    <div class="lp-readout__bar"><span></span><span></span><span></span></div>
+    <div class="lp-readout__body">
+      <div><span class="stage">[stage 3]</span> compressing locally…</div>
+      <div><span id="lpTyped">&nbsp;</span><span class="lp-cursor">▍</span></div>
+      <div class="lp-readout__meter"><i id="lpMeter"></i></div>
+    </div>
+    <div class="lp-readout__stats">
+      <div><span>Characters</span><b id="lpChars">3,233</b></div>
+      <div><span>Semantic accuracy</span><b>86.72%</b></div>
+      <div><span>Cost saved</span><b>$0.000321</b></div>
+      <div><span>Processing time</span><b>16.935s</b></div>
+    </div>
+  </div>
+
+  <div class="lp-hero__scrollcue"><span>Scroll</span><span class="chevron"></span></div>
+</section>
+
+<!-- FEATURE TOUR -->
+<div class="lp-tour">
+
+  <!-- 01 OPTIMIZE -->
+  <section class="lp-feature" id="optimize">
+    <div class="lp-feature__visual">
+      <div class="lp-frame" style="--d:0">
+        <div class="lp-frame__chrome"><span></span><span></span><span></span></div>
+        <img src="{% static 'images/dashboard-hero.png' %}" alt="Prompt Optimizer dashboard">
+      </div>
+    </div>
+    <div class="lp-feature__copy">
+      <div class="lp-feature__eyebrow">01 — Dashboard</div>
+      <h2 class="feature-title" data-type="split">One box in, one clean prompt out.</h2>
+      <p class="feature-text" data-type="char">
+        Drop your draft into the prompt box, choose the model it's headed for —
+        Gemini or a local Ollama model — and pick a level: Light, Balanced, or
+        Aggressive. The overlay walks the run through six stages, from receiving
+        the prompt to a finished benchmark, so nothing feels like a black box.
+      </p>
+      <div class="lp-feature__stats">
+        <span class="lp-chip">3,233 → <b class="lp-count" data-target="1670">1,670</b> characters</span>
+        <span class="lp-chip accent">Semantic accuracy <b class="lp-count" data-target="86.72" data-decimals="2" data-suffix="%">86.72%</b></span>
+        <span class="lp-chip">Optimization score <b class="lp-count" data-target="14.53" data-decimals="2" data-suffix="%">14.53%</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 HISTORY -->
+  <section class="lp-feature is-reversed" id="history">
+    <div class="lp-feature__visual">
+      <div class="lp-frame" style="--d:0">
+        <div class="lp-frame__chrome"><span></span><span></span><span></span></div>
+        <img src="{% static 'images/history-table.png' %}" alt="Prompt History table">
+      </div>
+    </div>
+    <div class="lp-feature__copy">
+      <div class="lp-feature__eyebrow">02 — History</div>
+      <h2 class="feature-title" data-type="word">Every run, kept — nothing to reconstruct later.</h2>
+      <p class="feature-text" data-type="wave">
+        Each optimization lands in a running log: date, model, tokens saved,
+        cost saved, status. Runs on gemini-3.1-flash-lite in this account have
+        saved anywhere from 7 tokens on a tight prompt to 416 on a rambling one
+        — and every one of them is one click from its full before/after.
+      </p>
+      <div class="lp-feature__stats">
+        <span class="lp-chip">Best run <b class="lp-count" data-target="416" data-suffix=" tokens">416 tokens</b></span>
+        <span class="lp-chip accent"><b class="lp-count" data-target="100" data-suffix="%">100%</b> completed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 PROMPT ANALYSIS -->
+  <section class="lp-feature" id="analysis">
+    <div class="lp-feature__visual">
+      <div class="lp-frame" style="--d:0">
+        <div class="lp-frame__chrome"><span></span><span></span><span></span></div>
+        <img src="{% static 'images/prompt-analysis.png' %}" alt="Prompt Analysis detail view">
+      </div>
+    </div>
+    <div class="lp-feature__copy">
+      <div class="lp-feature__eyebrow">03 — Prompt Analysis</div>
+      <h2 class="feature-title" data-type="line">See exactly what got cut, and what didn't.</h2>
+      <p class="feature-text" data-type="char">
+        Original and optimized sit side by side, expandable in full. A rewrite
+        that took 2,330 tokens down to 2,007 — 416 saved — still scored a
+        "Good" quality rating and 89.17% semantic accuracy, so you can check
+        the trade-off before you trust it.
+      </p>
+      <div class="lp-feature__stats">
+        <span class="lp-chip">2,330 → <b class="lp-count" data-target="2007">2,007</b> tokens</span>
+        <span class="lp-chip accent">Semantic accuracy <b class="lp-count" data-target="89.17" data-decimals="2" data-suffix="%">89.17%</b></span>
+        <span class="lp-chip">Quality <b>Good</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ANALYTICS -->
+  <section class="lp-feature is-reversed" id="analytics">
+    <div class="lp-feature__visual">
+      <div class="lp-frame" style="--d:0">
+        <div class="lp-frame__chrome"><span></span><span></span><span></span></div>
+        <img src="{% static 'images/analytics-overview.png' %}" alt="Analytics overview stats">
+      </div>
+      <div class="lp-gallery">
+        <div class="lp-frame" style="--d:1"><img src="{% static 'images/token-trend.png' %}" alt="Token saving trend chart"></div>
+        <div class="lp-frame" style="--d:2"><img src="{% static 'images/analytics-charts.png' %}" alt="Model usage and optimization level charts"></div>
+      </div>
+    </div>
+    <div class="lp-feature__copy">
+      <div class="lp-feature__eyebrow">04 — Analytics</div>
+      <h2 class="feature-title" data-type="split">The aggregate view, once the runs pile up.</h2>
+      <p class="feature-text" data-type="wave">
+        Across 83 optimizations, 18,001 tokens have been trimmed out of
+        132,421 — a 13.59% average reduction — at a 100% success rate.
+        gemini-3.1-flash-lite carries 76% of the load, with daily savings
+        spiking past 5,800 tokens on the busiest day.
+      </p>
+      <div class="lp-feature__stats">
+        <span class="lp-chip"><b class="lp-count" data-target="83">83</b> optimizations</span>
+        <span class="lp-chip accent"><b class="lp-count" data-target="0.017852" data-decimals="6" data-prefix="$">$0.017852</b> saved</span>
+        <span class="lp-chip"><b class="lp-count" data-target="14.51" data-decimals="2" data-suffix="s">14.51s</b> avg time</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 COMPARISON -->
+  <section class="lp-feature" id="comparison">
+    <div class="lp-feature__visual">
+      <div class="lp-frame" style="--d:0">
+        <div class="lp-frame__chrome"><span></span><span></span><span></span></div>
+        <img src="{% static 'images/comparison-history.png' %}" alt="Comparison History side by side">
+      </div>
+      <div class="lp-gallery">
+        <div class="lp-frame" style="--d:1"><img src="{% static 'images/comparison-modal.png' %}" alt="Comparison details modal"></div>
+        <div class="lp-frame" style="--d:2"><img src="{% static 'images/comparison-scores.png' %}" alt="Comparison scores detail"></div>
+      </div>
+    </div>
+    <div class="lp-feature__copy">
+      <div class="lp-feature__eyebrow">05 — Comparison</div>
+      <h2 class="feature-title" data-type="line">Run the same prompt through more than one optimizer.</h2>
+      <p class="feature-text" data-type="char">
+        One original prompt, three optimizers, laid out side by side under a
+        shared history ID: Aiven trimmed 321 tokens at 86.72% semantic
+        accuracy, Prompt_generator matched it at 322 tokens and 92.89%, and
+        Numstack's redundancy pass kept 99.63% accuracy while saving 24.
+        Open any card for the full input/output token breakdown.
+      </p>
+      <div class="lp-feature__stats">
+        <span class="lp-chip">Aiven <b class="lp-count" data-target="321" data-suffix=" saved">321 saved</b></span>
+        <span class="lp-chip accent">Prompt_generator <b class="lp-count" data-target="92.89" data-decimals="2" data-suffix="%">92.89%</b></span>
+        <span class="lp-chip">Numstack <b class="lp-count" data-target="99.63" data-decimals="2" data-suffix="%">99.63%</b></span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- CLOSING -->
+<section class="lp-closing" id="lpClosing">
+  <h2 class="closing-title" data-type="split">Stop paying for filler tokens.</h2>
+  <p class="closing-text" data-type="blur">Every prompt you send twice is a prompt that should have been optimized once.</p>
+  <a class="lp-btn-primary" href="{% url 'login' %}">Log in and optimize</a>
+</section>
+
+<footer class="lp-footer">
+  <span>AI Token Optimizer</span>
+  <span>Gemini · Ollama · Local + LLM optimization</span>
+</footer>
+
+<script src="{% static 'js/token-optimizer.js' %}" defer></script>
+<script src="{% static 'js/text-spotlight.js' %}" defer></script>
+
+
+
+</body>
+</html>

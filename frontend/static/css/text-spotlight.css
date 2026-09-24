@@ -1,0 +1,104 @@
+/* Load this stylesheet after token-optimizer.css. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .lp-feature__copy.has-text-spotlight {
+    --text-light-x: 50%;
+    --text-light-y: 50%;
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* The light follows the pointer but stays behind the copy. */
+  .lp-feature__copy.has-text-spotlight::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 310px;
+    height: 310px;
+    left: var(--text-light-x);
+    top: var(--text-light-y);
+    translate: -50% -50%;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46, 216, 160, .16) 0%, rgba(255, 159, 91, .09) 32%, transparent 70%);
+    filter: blur(3px);
+    transition: opacity 180ms ease;
+  }
+
+  .lp-feature__copy.has-text-spotlight.is-text-lit::before {
+    opacity: 1;
+  }
+
+  /* Each word is independently transformed, so the rest of the copy never grows. */
+  .lp-feature__copy .lp-spotlight-word {
+    display: inline-block;
+    position: relative;
+    transform: scale(var(--text-zoom, 1));
+    transform-origin: center;
+    color: color-mix(in srgb, currentColor calc(100% * var(--text-brightness, 1)), white);
+    text-shadow: 0 0 calc(14px * var(--text-glow, 0)) rgba(46, 216, 160, .46);
+    will-change: transform, color, text-shadow;
+    transition: transform 110ms ease-out, color 110ms ease-out, text-shadow 110ms ease-out;
+  }
+
+  /* Header and footer share the page-wide pointer light set by token-optimizer.js. */
+  .lp-nav,
+  .lp-footer {
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .lp-nav::before,
+  .lp-footer::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: -80px 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(260px circle at var(--pointer-x, 50%) 50%, rgba(46, 216, 160, .18), rgba(255, 159, 91, .07) 33%, transparent 72%);
+    filter: blur(8px);
+    transition: opacity 220ms ease-out;
+  }
+
+  .lp-footer::before {
+    background: radial-gradient(280px circle at var(--pointer-x, 50%) 50%, rgba(255, 159, 91, .16), rgba(46, 216, 160, .07) 35%, transparent 72%);
+  }
+
+  body.is-pointer-active .lp-nav::before,
+  body.is-pointer-active .lp-footer::before {
+    opacity: 1;
+  }
+
+  .lp-nav__logo,
+  .lp-nav__cta,
+  .lp-footer > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Ambient pools use the open space around each feature instead of covering the screenshots. */
+  .lp-feature {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .lp-feature::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: min(54vw, 720px);
+    height: 320px;
+    left: clamp(-180px, calc(var(--pointer-x, 50%) - 360px), 42%);
+    bottom: -150px;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: .48;
+    background: radial-gradient(ellipse, rgba(46, 216, 160, .12), rgba(46, 216, 160, .035) 38%, transparent 72%);
+    filter: blur(20px);
+  }
+
+  .lp-feature.is-reversed::after {
+    background: radial-gradient(ellipse, rgba(255, 159, 91, .13), rgba(255, 159, 91, .035) 38%, transparent 72%);
+  }
+}
