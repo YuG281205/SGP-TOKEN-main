@@ -3,398 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SGP Token Optimizer</title>
-
     <link rel="stylesheet" href="popup.css">
 </head>
-
 <body>
+<div class="container">
 
-    <div class="container">
-
-        <!-- ========================================= -->
-        <!-- HEADER -->
-        <!-- ========================================= -->
-
-        <div class="header">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2 4 14h7l-1 8 9-12h-7z"/>
+            </svg>
+        </div>
+        <div>
             <h1>SGP Token Optimizer</h1>
             <p>AI-powered prompt optimization</p>
         </div>
+    </header>
 
+    <!-- LOGIN -->
+    <section id="loginSection" class="card">
+        <h2>Welcome back</h2>
+        <p class="hint">Sign in to optimize prompts and save tokens.</p>
 
-        <!-- ========================================= -->
-        <!-- LOGIN SECTION -->
-        <!-- ========================================= -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter username" autocomplete="username">
+        </div>
 
-        <section id="loginSection" class="section">
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter password" autocomplete="current-password">
+        </div>
 
-            <h2>Login</h2>
+        <button id="loginBtn" class="primary-btn">Login</button>
+        <div id="loginMessage" class="message" role="status" aria-live="polite"></div>
+    </section>
 
+    <!-- OPTIMIZER -->
+    <section id="optimizerSection" class="hidden">
+
+        <div class="user-bar">
+            <div>
+                <span class="user-label">Logged in as</span>
+                <strong id="loggedInUser">User</strong>
+            </div>
+            <button id="logoutBtn" class="ghost-btn">Logout</button>
+        </div>
+
+        <div class="card">
+
+            <!-- MODE -->
             <div class="form-group">
-                <label for="username">Username</label>
-
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Enter username"
-                    autocomplete="username"
-                >
-            </div>
-
-
-            <div class="form-group">
-                <label for="password">Password</label>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter password"
-                    autocomplete="current-password"
-                >
-            </div>
-
-
-            <button id="loginBtn" class="primary-btn">
-                Login
-            </button>
-
-
-            <div id="loginMessage" class="message"></div>
-
-        </section>
-
-
-
-        <!-- ========================================= -->
-        <!-- OPTIMIZER SECTION -->
-        <!-- ========================================= -->
-
-        <section id="optimizerSection" class="section hidden">
-
-            <!-- USER INFO -->
-
-            <div class="user-bar">
-
-                <div>
-                    <span class="user-label">Logged in as</span>
-
-                    <strong id="loggedInUser">
-                        User
-                    </strong>
+                <span class="section-label" id="modeLabel">Optimization mode</span>
+                <div class="mode-buttons" role="group" aria-labelledby="modeLabel">
+                    <button id="fastModeBtn" class="mode-btn active" data-mode="fast" aria-pressed="true">Fast Optimize</button>
+                    <button id="analyzeModeBtn" class="mode-btn" data-mode="analyze" aria-pressed="false">Analyze &amp; Optimize</button>
                 </div>
-
-                <button id="logoutBtn" class="logout-btn">
-                    Logout
-                </button>
-
             </div>
 
-
-            <!-- ===================================== -->
-            <!-- MODE SELECTION -->
-            <!-- ===================================== -->
-
-            <div class="mode-section">
-
-                <label class="section-label">
-                    Optimization Mode
-                </label>
-
-
-                <div class="mode-buttons">
-
-                    <button
-                        id="fastModeBtn"
-                        class="mode-btn active"
-                        data-mode="fast"
-                    >
-                        Fast Optimize
-                    </button>
-
-
-                    <button
-                        id="analyzeModeBtn"
-                        class="mode-btn"
-                        data-mode="analyze"
-                    >
-                        Analyze & Optimize
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ===================================== -->
             <!-- PROMPT -->
-            <!-- ===================================== -->
-
             <div class="form-group">
-
-                <label for="prompt">
-                    Enter Prompt
-                </label>
-
-                <textarea
-                    id="prompt"
-                    rows="8"
-                    placeholder="Enter your prompt here..."
-                ></textarea>
-
+                <label for="prompt">Your prompt</label>
+                <textarea id="prompt" rows="6" placeholder="Enter your prompt here..."></textarea>
+                <div class="char-row">
+                    <span id="promptHint" class="char-count">Paste or type a prompt</span>
+                    <span id="charCount" class="char-count">0 chars · ~0 tokens</span>
+                </div>
             </div>
 
+            <!-- SETTINGS -->
+            <div class="settings-grid">
+                <div class="form-group">
+                    <label for="aiModel">AI model</label>
+                    <select id="aiModel">
+                        <option value="gemini">Gemini</option>
+                        <option value="ollama">Ollama</option>
+                    </select>
+                </div>
 
-
-            <!-- ===================================== -->
-            <!-- AI MODEL -->
-            <!-- ===================================== -->
-
-            <div class="form-group">
-
-                <label for="aiModel">
-                    AI Model
-                </label>
-
-                <select id="aiModel">
-
-                    <option value="gemini">
-                        Gemini
-                    </option>
-
-                    <option value="ollama">
-                        Ollama
-                    </option>
-
-                </select>
-
+                <div id="optimizationLevelGroup" class="form-group">
+                    <label for="optimizationLevel">Level</label>
+                    <select id="optimizationLevel">
+                        <option value="balanced" selected>Balanced</option>
+                        <option value="light">Light</option>
+                        <option value="aggressive">Aggressive</option>
+                    </select>
+                </div>
             </div>
 
+            <button id="optimizeBtn" class="primary-btn">Fast Optimize</button>
+            <div id="optimizeMessage" class="message" role="status" aria-live="polite"></div>
+        </div>
 
+        <!-- FAST RESULT -->
+        <div id="fastResult" class="card result hidden">
+            <div class="result-head">
+                <h3>Optimized prompt</h3>
+                <span class="pill"><span id="fastStatus">Processing</span></span>
+            </div>
+            <div class="result-box"><p id="fastOptimizedPrompt"></p></div>
+            <div class="action-row">
+                <button class="secondary-btn" data-copy="fastOptimizedPrompt">Copy</button>
+                <button class="secondary-btn" id="insertBtn">Insert into ChatGPT</button>
+            </div>
+        </div>
 
-            <!-- ===================================== -->
-            <!-- OPTIMIZATION LEVEL -->
-            <!-- ===================================== -->
+        <!-- ANALYSIS RESULT -->
+        <div id="analysisResult" class="card result hidden">
+            <h3>Token analysis</h3>
 
-            <div
-                id="optimizationLevelGroup"
-                class="form-group"
-            >
-
-                <label for="optimizationLevel">
-                    Optimization Level
-                </label>
-
-                <select id="optimizationLevel">
-
-                    <option value="balanced" selected>
-                        Balanced
-                    </option>
-
-                    <option value="light">
-                        Light
-                    </option>
-
-                    <option value="aggressive">
-                        Aggressive
-                    </option>
-
-                </select>
-
+            <div class="hero-stat">
+                <div>
+                    <span>Reduction</span>
+                    <strong id="reductionPercent">-</strong>
+                </div>
+                <div class="hero-meter" aria-hidden="true"><i id="reductionBar"></i></div>
             </div>
 
-
-
-            <!-- ===================================== -->
-            <!-- ACTION BUTTON -->
-            <!-- ===================================== -->
-
-            <button
-                id="optimizeBtn"
-                class="primary-btn"
-            >
-                Fast Optimize
-            </button>
-
-
-            <div
-                id="optimizeMessage"
-                class="message"
-            ></div>
-
-
-
-            <!-- ===================================== -->
-            <!-- FAST RESULT -->
-            <!-- ===================================== -->
-
-            <div
-                id="fastResult"
-                class="result-section hidden"
-            >
-
-                <h3>Optimized Prompt</h3>
-
-                <div class="result-box">
-
-                    <p id="fastOptimizedPrompt"></p>
-
-                </div>
-
-
-                <div class="status-box">
-
-                    <span>Status</span>
-
-                    <strong id="fastStatus">
-                        Processing
-                    </strong>
-
-                </div>
-
+            <div class="stats-grid">
+                <div class="stat-card"><span>Original</span><strong id="originalTokens">-</strong></div>
+                <div class="stat-card"><span>Optimized</span><strong id="optimizedTokens">-</strong></div>
+                <div class="stat-card"><span>Tokens saved</span><strong id="tokensSaved">-</strong></div>
+                <div class="stat-card"><span>Cost saved</span><strong id="costSaved">-</strong></div>
+                <div class="stat-card"><span>Semantic accuracy</span><strong id="semanticAccuracy">-</strong></div>
+                <div class="stat-card"><span>Quality</span><strong id="qualityRating">-</strong></div>
+                <div class="stat-card wide"><span>Optimization score</span><strong id="optimizationScore">-</strong></div>
             </div>
 
-
-
-            <!-- ===================================== -->
-            <!-- ANALYSIS RESULT -->
-            <!-- ===================================== -->
-
-            <div
-                id="analysisResult"
-                class="result-section hidden"
-            >
-
-                <h3>Token Analysis</h3>
-
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-
-                        <span>Original</span>
-
-                        <strong id="originalTokens">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Optimized</span>
-
-                        <strong id="optimizedTokens">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Tokens Saved</span>
-
-                        <strong id="tokensSaved">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Reduction</span>
-
-                        <strong id="reductionPercent">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Semantic Accuracy</span>
-
-                        <strong id="semanticAccuracy">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Quality</span>
-
-                        <strong id="qualityRating">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Optimization Score</span>
-
-                        <strong id="optimizationScore">
-                            -
-                        </strong>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <span>Cost Saved</span>
-
-                        <strong id="costSaved">
-                            -
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- OPTIMIZED PROMPT -->
-
-                <h3>
-                    Optimized Prompt
-                </h3>
-
-                <div class="result-box">
-
-                    <p id="optimizedPrompt"></p>
-
-                </div>
-
-
-                <!-- ORIGINAL PROMPT -->
-
-                <h3>
-                    Original Prompt
-                </h3>
-
-                <div class="result-box">
-
-                    <p id="originalPrompt"></p>
-
-                </div>
-
+            <div class="result-head">
+                <h3>Optimized prompt</h3>
+                <button class="link-btn" data-copy="optimizedPrompt">Copy</button>
             </div>
+            <div class="result-box"><p id="optimizedPrompt"></p></div>
 
-        </section>
+            <details>
+                <summary>Original prompt</summary>
+                <div class="result-box"><p id="originalPrompt"></p></div>
+            </details>
+        </div>
 
-    </div>
+    </section>
+</div>
 
-
-    <script src="popup.js"></script>
-
+<script src="popup.js"></script>
 </body>
 </html>

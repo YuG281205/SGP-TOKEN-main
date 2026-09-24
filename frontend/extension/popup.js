@@ -36,27 +36,36 @@ const promptInput = document.getElementById("prompt");
 
 // Settings
 const aiModel = document.getElementById("aiModel");
-const optimizationLevel = document.getElementById("optimizationLevel");
+
+const optimizationLevel =
+    document.getElementById("optimizationLevel");
 
 const optimizationLevelGroup =
     document.getElementById("optimizationLevelGroup");
 
 
 // Action
-const optimizeBtn = document.getElementById("optimizeBtn");
-const optimizeMessage = document.getElementById("optimizeMessage");
+const optimizeBtn =
+    document.getElementById("optimizeBtn");
+
+const optimizeMessage =
+    document.getElementById("optimizeMessage");
 
 
 // Fast result
-const fastResult = document.getElementById("fastResult");
+const fastResult =
+    document.getElementById("fastResult");
+
 const fastOptimizedPrompt =
     document.getElementById("fastOptimizedPrompt");
 
-const fastStatus = document.getElementById("fastStatus");
+const fastStatus =
+    document.getElementById("fastStatus");
 
 
 // Analysis result
-const analysisResult = document.getElementById("analysisResult");
+const analysisResult =
+    document.getElementById("analysisResult");
 
 const originalTokens =
     document.getElementById("originalTokens");
@@ -100,48 +109,101 @@ let currentMode = "fast";
 // PAGE LOAD
 // =========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    const data = await chrome.storage.local.get([
-        "accessToken",
-        "refreshToken",
-        "username"
-    ]);
+        const data =
+            await chrome.storage.local.get([
+                "accessToken",
+                "refreshToken",
+                "username"
+            ]);
 
-    if (data.accessToken) {
+        if (data.accessToken) {
 
-        loggedInUser.textContent =
-            data.username || "User";
+            loggedInUser.textContent =
+                data.username || "User";
 
-        showOptimizer();
+            showOptimizer();
 
-    } else {
+            // Load latest ChatGPT prompt
+            await loadDetectedPrompt();
 
-        showLogin();
+        } else {
+
+            showLogin();
+
+        }
+    }
+);
+
+
+// =========================================
+// LOAD LATEST CHATGPT PROMPT
+// =========================================
+
+async function loadDetectedPrompt() {
+
+    try {
+
+        const data =
+            await chrome.storage.local.get([
+                "detectedPrompt",
+                "detectedSource"
+            ]);
+
+        if (
+            data.detectedPrompt &&
+            data.detectedSource === "chatgpt"
+        ) {
+
+            promptInput.value =
+                data.detectedPrompt;
+
+            console.log(
+                "SGP POPUP: Loaded latest ChatGPT prompt:",
+                data.detectedPrompt
+            );
+
+        } else {
+
+            promptInput.value = "";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "SGP POPUP: Could not load detected prompt:",
+            error
+        );
 
     }
-
-    // Load the latest prompt detected from ChatGPT
-    await loadDetectedPrompt();
-
-});
+}
 
 
 // =========================================
 // LOGIN
 // =========================================
 
-loginBtn.addEventListener("click", login);
+loginBtn.addEventListener(
+    "click",
+    login
+);
 
 
 // Allow Enter key
-passwordInput.addEventListener("keydown", (event) => {
+passwordInput.addEventListener(
+    "keydown",
+    (event) => {
 
-    if (event.key === "Enter") {
-        login();
+        if (event.key === "Enter") {
+            login();
+        }
+
     }
-
-});
+);
 
 
 async function login() {
@@ -151,6 +213,7 @@ async function login() {
 
     const password =
         passwordInput.value;
+
 
     if (!username || !password) {
 
@@ -164,31 +227,40 @@ async function login() {
 
 
     loginBtn.disabled = true;
-    loginBtn.textContent = "Logging in...";
 
-    showLoginMessage("", false);
+    loginBtn.textContent =
+        "Logging in...";
+
+
+    showLoginMessage(
+        "",
+        false
+    );
 
 
     try {
 
-        const response = await fetch(
-            `${API_BASE_URL}/login/`,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                `${API_BASE_URL}/login/`,
+                {
+                    method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            }
-        );
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                }
+            );
 
 
-        const data = await response.json();
+        const data =
+            await response.json();
 
 
         if (!response.ok) {
@@ -197,19 +269,31 @@ async function login() {
                 data.message ||
                 "Login failed.";
 
-            if (typeof data === "object") {
+
+            if (
+                typeof data === "object"
+            ) {
 
                 if (data.detail) {
-                    message = data.detail;
+                    message =
+                        data.detail;
                 }
 
-                if (data.non_field_errors) {
+                if (
+                    data.non_field_errors
+                ) {
+
                     message =
                         data.non_field_errors[0];
+
                 }
+
             }
 
-            throw new Error(message);
+
+            throw new Error(
+                message
+            );
         }
 
 
@@ -219,25 +303,31 @@ async function login() {
 
         await chrome.storage.local.set({
 
-            accessToken: data.access,
+            accessToken:
+                data.access,
 
-            refreshToken: data.refresh,
+            refreshToken:
+                data.refresh,
 
             username:
-                data.username || username
+                data.username ||
+                username
 
         });
 
 
         loggedInUser.textContent =
-            data.username || username;
+            data.username ||
+            username;
 
 
         passwordInput.value = "";
 
+
         showOptimizer();
 
-        // Load ChatGPT prompt after login
+
+        // Load current ChatGPT prompt
         await loadDetectedPrompt();
 
 
@@ -248,17 +338,20 @@ async function login() {
             error
         );
 
+
         showLoginMessage(
             error.message ||
             "Unable to login.",
             true
         );
 
+
     } finally {
 
         loginBtn.disabled = false;
 
-        loginBtn.textContent = "Login";
+        loginBtn.textContent =
+            "Login";
 
     }
 
@@ -269,57 +362,31 @@ async function login() {
 // CHATGPT PROMPT DETECTION
 // =========================================
 
-// Load the prompt detected by content.js
-async function loadDetectedPrompt() {
-
-    try {
-
-        const data =
-            await chrome.storage.local.get([
-                "detectedPrompt",
-                "detectedSource"
-            ]);
-
-
-        if (
-            data.detectedPrompt &&
-            data.detectedSource === "chatgpt"
-        ) {
-
-            promptInput.value =
-                data.detectedPrompt;
-
-            showOptimizeMessage(
-                "Prompt detected from ChatGPT.",
-                false
-            );
-
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Prompt Detection Error:",
-            error
-        );
-
-    }
-
-}
-
-
-// Receive a prompt while the popup is open
 chrome.runtime.onMessage.addListener(
     (message) => {
 
+        console.log(
+            "SGP POPUP RECEIVED:",
+            message
+        );
+
+
         if (
             message &&
-            message.type === "PROMPT_DETECTED" &&
+            message.type ===
+                "PROMPT_DETECTED" &&
             message.prompt
         ) {
 
             promptInput.value =
                 message.prompt;
+
+
+            console.log(
+                "SGP POPUP: Latest prompt:",
+                message.prompt
+            );
+
 
             showOptimizeMessage(
                 "Prompt detected from ChatGPT.",
@@ -359,9 +426,14 @@ function setMode(mode) {
 
     if (mode === "fast") {
 
-        fastModeBtn.classList.add("active");
+        fastModeBtn.classList.add(
+            "active"
+        );
 
-        analyzeModeBtn.classList.remove("active");
+        analyzeModeBtn.classList.remove(
+            "active"
+        );
+
 
         optimizeBtn.textContent =
             "Fast Optimize";
@@ -372,10 +444,10 @@ function setMode(mode) {
         );
 
 
-        // Results
         analysisResult.classList.add(
             "hidden"
         );
+
 
         return;
     }
@@ -385,9 +457,14 @@ function setMode(mode) {
     // ANALYZE MODE
     // =====================================
 
-    fastModeBtn.classList.remove("active");
+    fastModeBtn.classList.remove(
+        "active"
+    );
 
-    analyzeModeBtn.classList.add("active");
+    analyzeModeBtn.classList.add(
+        "active"
+    );
+
 
     optimizeBtn.textContent =
         "Analyze & Optimize";
@@ -420,8 +497,10 @@ async function optimizePrompt() {
     const prompt =
         promptInput.value.trim();
 
+
     const model =
         aiModel.value;
+
 
     const level =
         optimizationLevel.value;
@@ -461,6 +540,7 @@ async function optimizePrompt() {
 
     optimizeBtn.disabled = true;
 
+
     optimizeBtn.textContent =
         currentMode === "fast"
             ? "Optimizing..."
@@ -476,6 +556,7 @@ async function optimizePrompt() {
     fastResult.classList.add(
         "hidden"
     );
+
 
     analysisResult.classList.add(
         "hidden"
@@ -501,6 +582,7 @@ async function optimizePrompt() {
             throw new Error(
                 "Session expired. Please login again."
             );
+
         }
 
 
@@ -528,31 +610,35 @@ async function optimizePrompt() {
         // API REQUEST
         // =================================
 
-        const response = await fetch(
-            endpoint,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                endpoint,
+                {
+                    method: "POST",
 
-                headers: {
+                    headers: {
 
-                    "Content-Type":
-                        "application/json",
+                        "Content-Type":
+                            "application/json",
 
-                    "Authorization":
-                        `Bearer ${storage.accessToken}`
-                },
+                        "Authorization":
+                            `Bearer ${storage.accessToken}`
 
-                body: JSON.stringify({
+                    },
 
-                    prompt: prompt,
+                    body: JSON.stringify({
 
-                    ai_model: model,
+                        prompt: prompt,
 
-                    optimization_level: level
+                        ai_model: model,
 
-                })
-            }
-        );
+                        optimization_level:
+                            level
+
+                    })
+
+                }
+            );
 
 
         // =================================
@@ -567,11 +653,14 @@ async function optimizePrompt() {
                 "username"
             ]);
 
+
             showLogin();
+
 
             throw new Error(
                 "Session expired. Please login again."
             );
+
         }
 
 
@@ -590,7 +679,11 @@ async function optimizePrompt() {
                 data.detail ||
                 "Optimization failed.";
 
-            throw new Error(message);
+
+            throw new Error(
+                message
+            );
+
         }
 
 
@@ -604,16 +697,25 @@ async function optimizePrompt() {
                 data.message ||
                 "Optimization failed."
             );
+
         }
 
 
+        // =================================
+        // DISPLAY RESULT
+        // =================================
+
         if (currentMode === "fast") {
 
-            displayFastResult(data);
+            displayFastResult(
+                data
+            );
 
         } else {
 
-            displayAnalysisResult(data);
+            displayAnalysisResult(
+                data
+            );
 
         }
 
@@ -631,15 +733,18 @@ async function optimizePrompt() {
             error
         );
 
+
         showOptimizeMessage(
             error.message ||
             "Something went wrong.",
             true
         );
 
+
     } finally {
 
         optimizeBtn.disabled = false;
+
 
         optimizeBtn.textContent =
             currentMode === "fast"
@@ -661,19 +766,25 @@ function displayFastResult(data) {
         "hidden"
     );
 
+
     const optimized =
         data.optimized_prompt ||
         "No optimized prompt returned.";
 
+
     fastOptimizedPrompt.textContent =
         optimized;
+
 
     fastStatus.textContent =
         data.status ||
         "Processing";
 
 
-    // Send optimized prompt back to ChatGPT
+    // =====================================
+    // SEND OPTIMIZED PROMPT TO CHATGPT
+    // =====================================
+
     chrome.tabs.query(
         {
             active: true,
@@ -681,28 +792,41 @@ function displayFastResult(data) {
         },
         (tabs) => {
 
-            if (!tabs || !tabs[0]) {
+            if (
+                !tabs ||
+                !tabs[0]
+            ) {
+
                 return;
+
             }
+
 
             chrome.tabs.sendMessage(
                 tabs[0].id,
                 {
-                    type: "INSERT_OPTIMIZED_PROMPT",
-                    prompt: optimized
+                    type:
+                        "INSERT_OPTIMIZED_PROMPT",
+
+                    prompt:
+                        optimized
                 }
-            ).catch((error) => {
+            ).catch(
+                (error) => {
 
-                console.log(
-                    "Could not send optimized prompt to ChatGPT:",
-                    error
-                );
+                    console.log(
+                        "Could not send optimized prompt to ChatGPT:",
+                        error
+                    );
 
-            });
+                }
+            );
 
         }
     );
+
 }
+
 
 // =========================================
 // ANALYSIS RESULT
@@ -739,7 +863,7 @@ function displayAnalysisResult(data) {
 
     // =====================================
     // REDUCTION %
-    // =====================================
+// =========================================
 
     let reduction = 0;
 
@@ -747,8 +871,10 @@ function displayAnalysisResult(data) {
     if (original > 0) {
 
         reduction =
-            ((original - optimized) /
-                original) * 100;
+            (
+                (original - optimized) /
+                original
+            ) * 100;
 
     }
 
@@ -758,15 +884,21 @@ function displayAnalysisResult(data) {
     // =====================================
 
     originalTokens.textContent =
-        formatNumber(original);
+        formatNumber(
+            original
+        );
 
 
     optimizedTokens.textContent =
-        formatNumber(optimized);
+        formatNumber(
+            optimized
+        );
 
 
     tokensSaved.textContent =
-        formatNumber(saved);
+        formatNumber(
+            saved
+        );
 
 
     reductionPercent.textContent =
@@ -825,6 +957,7 @@ function formatNumber(value) {
 
     }
 
+
     return Number(value).toLocaleString();
 
 }
@@ -845,6 +978,7 @@ function formatValue(value) {
         return "-";
 
     }
+
 
     return value;
 
@@ -867,12 +1001,17 @@ function formatCost(value) {
 
     }
 
+
     const number =
         Number(value);
 
+
     if (Number.isNaN(number)) {
+
         return value;
+
     }
+
 
     return `$${number.toFixed(6)}`;
 
@@ -890,10 +1029,15 @@ logoutBtn.addEventListener(
         await chrome.storage.local.remove([
             "accessToken",
             "refreshToken",
-            "username"
+            "username",
+            "detectedPrompt",
+            "detectedAt",
+            "detectedSource"
         ]);
 
+
         promptInput.value = "";
+
 
         showLogin();
 
@@ -911,9 +1055,11 @@ function showLogin() {
         "hidden"
     );
 
+
     optimizerSection.classList.add(
         "hidden"
     );
+
 
     usernameInput.focus();
 
@@ -930,11 +1076,15 @@ function showOptimizer() {
         "hidden"
     );
 
+
     optimizerSection.classList.remove(
         "hidden"
     );
 
-    setMode(currentMode);
+
+    setMode(
+        currentMode
+    );
 
 }
 
